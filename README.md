@@ -37,13 +37,18 @@ Blender 4.2 or newer. It is developed and tested on Blender 5.1.
 
 ## Install
 
-1. Download or clone this repository.
-2. Build the extension package from the `sketch_tools` folder:
-   ```bash
-   blender --command extension build --source-dir sketch_tools
-   ```
-   You can also zip the `sketch_tools` folder yourself.
-3. In Blender, open **Edit > Preferences > Get Extensions**, open the drop-down menu at the top right, choose **Install from Disk**, and pick the zip.
+1. Download `sketch_tools-<version>.zip` from the [latest release](https://github.com/Quintussmit2020/blender-sketch-tools/releases/latest). Don't unzip it.
+2. In Blender, open **Edit > Preferences > Get Extensions**, open the drop-down menu at the top right, choose **Install from Disk**, and pick the zip.
+
+You can also drag the zip into the Blender window.
+
+### Build it yourself
+
+To build the zip from the source, run this from a clone of the repository:
+
+```bash
+blender --command extension build --source-dir sketch_tools
+```
 
 ## Quick start
 
