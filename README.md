@@ -2,6 +2,8 @@
 
 A Blender add-on for the "sketch, then extrude or sweep" workflow: draw flat wire shapes or 3D paths, then turn them into live, editable meshes.
 
+I had Claude build this for me to bring some of my favourite 3ds Max features to Blender: sketching splines, then extruding or sweeping them, with fillet, trim and extend.
+
 > [!WARNING]
 > **This add-on is 100% vibe coded.** Every line was written by AI coding agents, directed and tested by a human.
 > It is built for my own personal use, not as a supported product.
