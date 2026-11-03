@@ -10,3 +10,6 @@ recovery/
 
 # Local Claude Code settings
 .claude/settings.local.json
+
+# Built extension packages
+*.zip
