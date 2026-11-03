@@ -52,6 +52,38 @@ Blender 4.2 or newer. It is developed and tested on Blender 5.1.
 3. Under **Output**, choose **Extrude** or **Sweep** and adjust the settings.
 4. Keep editing the sketch, and the mesh follows. Click **Apply** when you are done.
 
+## How to use
+
+### Snapping
+
+- **Flat sketches** follow Blender's snap magnet in the viewport header. Shift+Tab turns it on or off, even while you draw. Holding **Ctrl** flips it for as long as you hold the key.
+- When snapping is on, the cursor snaps first to the sketch's own vertices, then to visible vertices and edges of other objects, then to the grid.
+- **3D paths** always snap to vertices, edge midpoints and points on edges of other objects. Hold **Shift** or **Ctrl** to turn snapping off.
+- The viewport header shows **Snapping on** or **Snapping off** while you draw.
+
+### Sketch tool shortcuts
+
+| Key | What it does |
+|---|---|
+| LMB | Place a point. For rectangles you can also drag. |
+| RMB, Enter or N | End the current line and keep it. The next click starts a new one. |
+| C | Close the line back to its first point. |
+| Shift | Lock the angle, in 45 degree steps on 3D paths. |
+| Ctrl (hold) | Flip snapping on flat sketches, or turn it off on 3D paths. |
+| R / O / P / A | Switch to rectangle, circle, polyline or arc. Press A again for the other arc type. On a flat sketch, R and O also start a shape before the first click. |
+| Type a number | Set a length in the scene unit (metres for Metric), then press Tab to type the angle. Rectangles take width, Tab, height. Circles take a radius. Flat sketches only. |
+| Esc | Cancel the current shape. |
+
+Ctrl+Z is off while a shape is being drawn. Finish or cancel it first, and then undo works as normal.
+
+### Fillet, trim and extend
+
+- **Fillet**: select the corner vertices, click **Fillet** and drag or type the radius. Ctrl snaps the radius to the grid. Enter or LMB confirms, and Esc or RMB cancels. You can also select vertices and type a value in the panel's **Fillet Radius** field to set those corners only.
+- **Trim**: click the part of an edge you want removed. It cuts back to the nearest crossings. Keep clicking to trim more. RMB or Enter finishes, and Esc undoes the whole run.
+- **Extend**: click near a loose end to extend it to the next edge in its way. RMB or Enter finishes, and Esc undoes the whole run.
+
+The Sketch tool can't select vertices, so switch to a select tool before picking corners to fillet.
+
 ## Tests
 
 The headless test suite runs inside Blender:
