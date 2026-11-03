@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+
+# Blender backups and recovery copies
+*.blend1
+*.blend2
+*_unsaved_backup_*.blend
+recovery/
+
+# Local Claude Code settings
+.claude/settings.local.json

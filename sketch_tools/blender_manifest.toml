@@ -1,0 +1,21 @@
+schema_version = "1.0.0"
+
+id = "sketch_tools"
+version = "0.1.0"
+name = "Sketch Tools"
+tagline = "Sketch shapes and 3D paths, then extrude or sweep them"
+maintainer = "Quintus Smit"
+type = "add-on"
+
+blender_version_min = "4.2.0"
+
+license = [
+  "SPDX:GPL-3.0-or-later",
+]
+
+[build]
+paths_exclude_pattern = [
+  "tests/",
+  "__pycache__/",
+  "*.pyc",
+]
