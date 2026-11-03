@@ -102,6 +102,12 @@ blender --background --factory-startup --python sketch_tools/tests/run.py
 - [SKETCH_TOOLS_PLAN.md](SKETCH_TOOLS_PLAN.md): the original design plan.
 - [DECISIONS.md](DECISIONS.md): corrections and decisions made during the build. Where this file and the plan disagree, this file wins.
 
+## Make it your own
+
+You're welcome to clone or fork this repository and extend it with your own AI coding assistant. That's how it was built.
+
+Point your assistant at [SKETCH_TOOLS_PLAN.md](SKETCH_TOOLS_PLAN.md) and [DECISIONS.md](DECISIONS.md) first. They explain the design and the reasons behind it. Run the test suite after each change to catch anything that breaks.
+
 ## License
 
 [GPL-3.0-or-later](LICENSE), like Blender itself.
