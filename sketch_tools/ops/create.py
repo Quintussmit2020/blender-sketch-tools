@@ -4,7 +4,8 @@ from bpy.props import EnumProperty
 from bpy_extras import view3d_utils
 from mathutils import Matrix, Vector
 
-from ..core import attributes, build
+from ..core import attributes, build, edges_to_sketch
+from ..core.resolve3d import PATH_NORMAL_ATTR
 from ..prefs import get_prefs
 from ..ui.tool import TOOL_ID
 
@@ -341,4 +342,75 @@ class SKETCH_OT_set_plane_from_face(_FacePickMixin, bpy.types.Operator):
         return {'FINISHED'}
 
 
-classes = (SKETCH_OT_new, SKETCH_OT_new_path_3d, SKETCH_OT_set_plane_from_face)
+def _view_towards_viewer(context):
+    space = context.space_data
+    if space is None or space.type != 'VIEW_3D' or space.region_3d is None:
+        return None
+    return space.region_3d.view_rotation @ Vector((0.0, 0.0, 1.0))
+
+
+class SKETCH_OT_edges_to_sketch(bpy.types.Operator):
+    bl_idname = "sketch.edges_to_sketch"
+    bl_label = "Edges to Sketch"
+    bl_description = ("Copy the selected edges into a new sketch object: a planar sketch when they lie in one "
+                      "plane, else a 3D path. The mesh is not changed")
+    bl_options = {'REGISTER', 'UNDO'}
+
+    @classmethod
+    def poll(cls, context):
+        obj = context.active_object
+        return context.mode == 'EDIT_MESH' and obj is not None and not build.is_sketch(obj)
+
+    def execute(self, context):
+        source = context.active_object
+        face_only = tuple(context.tool_settings.mesh_select_mode) == (False, False, True)
+        parts = []
+        # The edit cage is read while the objects are still in edit mode; nothing is written to it.
+        for obj in context.objects_in_mode:
+            if obj.type != 'MESH' or build.is_sketch(obj):
+                continue
+            bm = bmesh.from_edit_mesh(obj.data)
+            parts.append(edges_to_sketch.gather_edges(bm, obj.matrix_world, face_only))
+        merged = edges_to_sketch.merge(parts)
+        if not merged.edges:
+            self.report({'WARNING'}, "No edges are selected")
+            return {'CANCELLED'}
+        try:
+            result = edges_to_sketch.build_result(edges_to_sketch.weld(merged), _view_towards_viewer(context))
+        except edges_to_sketch.NothingToSketch as exc:
+            self.report({'WARNING'}, str(exc))
+            return {'CANCELLED'}
+
+        if result.planar:
+            matrix = frame_matrix(result.origin, result.x, result.y, result.z)
+            obj = _new_sketch_object(context, source.name + "_Sketch", matrix, attributes.ensure_attributes)
+        else:
+            obj = _new_sketch_object(context, source.name + "_Path", Matrix.Identity(4),
+                                     attributes.ensure_path_attributes)
+        mesh = obj.data
+        mesh.from_pydata([tuple(c) for c in result.coords], result.edges, [])
+        if not result.planar:
+            flat = [c for n in result.normals for c in n]
+            mesh.attributes[PATH_NORMAL_ATTR].data.foreach_set("vector", flat)
+        mesh.update()
+
+        st = obj.sketch_tools
+        # One rebuild at the end instead of one per property.
+        with build.suspended():
+            st.is_path_3d = not result.planar
+            st.is_sketch = True
+            if result.planar:
+                prefs = get_prefs(context)
+                if prefs is not None:
+                    st.fillet_segments = prefs.default_fillet_segments
+            st.output_mode = 'EXTRUDE' if result.planar and result.closed_only else 'SWEEP'
+
+        for other in context.selected_objects:
+            other.select_set(False)
+        obj.select_set(True)
+        context.view_layer.objects.active = obj
+        build.rebuild(obj)
+        return {'FINISHED'}
+
+
+classes = (SKETCH_OT_new, SKETCH_OT_new_path_3d, SKETCH_OT_set_plane_from_face, SKETCH_OT_edges_to_sketch)

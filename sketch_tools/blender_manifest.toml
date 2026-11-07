@@ -1,7 +1,7 @@
 schema_version = "1.0.0"
 
 id = "sketch_tools"
-version = "0.1.0"
+version = "0.2.0"
 name = "Sketch Tools"
 tagline = "Sketch shapes and 3D paths, then extrude or sweep them"
 maintainer = "Quintus Smit"

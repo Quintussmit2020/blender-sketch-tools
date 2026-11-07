@@ -17,6 +17,7 @@ I had Claude build this for me to bring some of my favourite 3ds Max features to
 - Snapping follows Blender's snap magnet (Shift+Tab), and holding Ctrl flips it. It snaps to the sketch's own vertices, then to vertices and edges of other objects, then to the grid.
 - Shift locks the angle. You can type lengths in the scene unit, and Tab switches to typing an angle.
 - **3D paths** are drawn straight onto the surfaces of other objects, snapping to vertices, edge midpoints and points on edges.
+- **Edges to Sketch**: turns edges selected on any mesh into a new sketch. Flat edges become a planar sketch, and anything else becomes a 3D path. The source mesh is left untouched.
 
 **Editing**
 - **Fillet**: rounds selected corners. Drag or type the radius, or set a radius per vertex in the panel.
@@ -80,6 +81,12 @@ blender --command extension build --source-dir sketch_tools
 | Esc | Cancel the current shape. |
 
 Ctrl+Z is off while a shape is being drawn. Finish or cancel it first, and then undo works as normal.
+
+### Edges to Sketch
+
+1. On any mesh, go to Edit Mode and select the edges you want. In face select mode, the outline of the selected faces is used instead.
+2. Click **Edges to Sketch** in the N-panel's **Create** section, or in the **Edge** menu or the right-click menu.
+3. A new object named `<mesh>_Sketch` or `<mesh>_Path` is created, selected and already built. A closed flat shape starts as **Extrude**, and open lines and 3D paths start as **Sweep**. Change it under **Output**.
 
 ### Fillet, trim and extend
 

@@ -40,6 +40,9 @@ class SKETCH_PT_create(_SketchToolsPanel, bpy.types.Panel):
         col.operator_menu_enum("sketch.new", "plane", text="New Sketch", icon='GREASEPENCIL')
         col.operator("sketch.set_plane_from_face", icon='FACESEL')
         col.operator("sketch.new_path_3d", icon='CURVE_PATH')
+        obj = context.active_object
+        if context.mode == 'EDIT_MESH' and obj is not None and not build.is_sketch(obj):
+            col.operator("sketch.edges_to_sketch", icon='EDGESEL')
 
 
 class SKETCH_PT_sketch(_ActiveSketchPanel, bpy.types.Panel):

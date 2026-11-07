@@ -15,7 +15,18 @@ def _draw_subdivide(self, context):
     layout.operator("sketch.subdivide", icon='MOD_SUBSURF')
 
 
-# Menu classes whose draw gets _draw_subdivide appended. The context menu picks its content by
+def _draw_edges_to_sketch(self, context):
+    obj = context.active_object
+    if obj is None or obj.type != 'MESH' or build.is_sketch(obj):
+        return
+    layout = self.layout
+    layout.separator()
+    layout.operator("sketch.edges_to_sketch", icon='CURVE_PATH')
+
+
+_DRAWS = (_draw_subdivide, _draw_edges_to_sketch)
+
+# Menu classes whose draw gets the draw functions appended. The context menu picks its content by
 # select mode, but appended functions draw in every mode, so the entry is there in vertex mode
 # too, where sketches are edited.
 _MENUS = ("VIEW3D_MT_edit_mesh_edges", "VIEW3D_MT_edit_mesh_context_menu")
@@ -25,11 +36,13 @@ def register():
     for name in _MENUS:
         menu = getattr(bpy.types, name, None)
         if menu is not None:
-            menu.append(_draw_subdivide)
+            for draw in _DRAWS:
+                menu.append(draw)
 
 
 def unregister():
     for name in reversed(_MENUS):
         menu = getattr(bpy.types, name, None)
         if menu is not None:
-            menu.remove(_draw_subdivide)
+            for draw in reversed(_DRAWS):
+                menu.remove(draw)
